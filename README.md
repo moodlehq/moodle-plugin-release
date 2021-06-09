@@ -2,7 +2,7 @@
 
 ## Usage
 
-1. Copy the template file [moodle-release.yml.dist](https://github.com/moodlehq/moodle-plugin-release/blob/main/moodle-release.yml.dist)
+1. Copy the template file [moodle-release.yml](https://github.com/moodlehq/moodle-plugin-release/blob/main/moodle-release.yml)
    into the `.github/workflows/moodle-release.yml` location within your plugin
    repository.
 2. Edit the file and set the `PLUGIN` environment variable to the full component name
