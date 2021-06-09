@@ -14,9 +14,9 @@
    ```
 
    There should be no need to edit any other line as long as you are happy with the
-   default behaviour of the workflow. If your release tags do not start with `v`
-   character (such as `v9.0.1`) then you may need to amend the trigger conditions.
-   Please refer to the GitHub Actions documentation for details.
+   default behaviour of the workflow.  Please refer to the GitHub Actions
+   documentation for details.
+
 3. Go to your plugin's Settings > Secrets section and define two environmental
    variables there that will be used for authentication at moodle.org. Use the names
    `MOODLE_ORG_USERNAME` and `MOODLE_ORG_PASSWORD` and set their values to the
@@ -39,6 +39,15 @@
   imported as release notes for the new version. Please see [Moodle dev
   docs](https://docs.moodle.org/dev/Plugin_files#CHANGES) for all supported names and
   formats.
+* If your release tags do not start with `v` character (such as `v9.0.1`) and you want
+  to trigger the workflow for any tag, change the condition in the YAML file as:
+
+  ```
+  on:
+    push:
+      tags:
+        - '*'
+  ```
 
 
 ## License
