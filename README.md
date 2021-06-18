@@ -17,11 +17,12 @@
    default behaviour of the workflow.  Please refer to the GitHub Actions
    documentation for details.
 
-3. Go to your plugin's Settings > Secrets section and define two environmental
-   variables there that will be used for authentication at moodle.org. Use the names
-   `MOODLE_ORG_USERNAME` and `MOODLE_ORG_PASSWORD` and set their values to the
-   username and password (respectively) of your account at <https://moodle.org>. This
-   user account must be set as a maintainer of the plugin in the Plugins directory.
+3. Go to your plugin's Settings > Secrets section and use the 'New repository secret'
+   button to define two repository secrets there that will be used for authentication at
+   moodle.org. Use the names `MOODLE_ORG_USERNAME` and `MOODLE_ORG_PASSWORD` and set their
+   values to the username and password (respectively) of your account at
+   <https://moodle.org>. This user account must be set as a maintainer of the plugin in
+   the Plugins directory.
 
 4. That's it! Now when you tag the repository with a tag that matches the configured
    condition, the tagged version will be released in the plugins directory.
