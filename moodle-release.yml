@@ -2,6 +2,8 @@
 # Whenever a new tag starting with "v" is pushed, add the tagged version
 # to the Moodle Plugins directory at https://moodle.org/plugins
 #
+# revision: 2021070201
+#
 name: Releasing in the Plugins directory
 
 on:
