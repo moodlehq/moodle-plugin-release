@@ -43,7 +43,16 @@ jobs:
             exit 1
           fi
           ZIPURL="https://api.github.com/repos/${{ github.repository }}/zipball/${TAGNAME}"
-          RESPONSE=$(${CURL} ${ENDPOINT} --data "wstoken=${TOKEN}&wsfunction=${FUNCTION}&moodlewsrestformat=json&frankenstyle=${PLUGIN}&zipurl=${ZIPURL}&vcssystem=git&vcsrepositoryurl=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}&vcstag=${TAGNAME}&changelogurl=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/commits/${TAGNAME}&altdownloadurl=${ZIPURL}")
+          RESPONSE=$(${CURL} ${ENDPOINT} --data-urlencode "wstoken=${TOKEN}" \
+                                         --data-urlencode "wsfunction=${FUNCTION}" \
+                                         --data-urlencode "moodlewsrestformat=json" \
+                                         --data-urlencode "frankenstyle=${PLUGIN}" \
+                                         --data-urlencode "zipurl=${ZIPURL}" \
+                                         --data-urlencode "vcssystem=git" \
+                                         --data-urlencode "vcsrepositoryurl=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}" \
+                                         --data-urlencode "vcstag=${TAGNAME}" \
+                                         --data-urlencode "changelogurl=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/commits/${TAGNAME}" \
+                                         --data-urlencode "altdownloadurl=${ZIPURL}")
           echo "::set-output name=response::${RESPONSE}"
 
       - name: Evaluate the response
