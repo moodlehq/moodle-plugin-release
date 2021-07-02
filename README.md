@@ -17,14 +17,16 @@
    default behaviour of the workflow.  Please refer to the GitHub Actions
    documentation for details.
 
-3. Go to your plugin's Settings > Secrets section and use the 'New repository secret'
-   button to define two repository secrets there that will be used for authentication at
-   moodle.org. Use the names `MOODLE_ORG_USERNAME` and `MOODLE_ORG_PASSWORD` and set their
-   values to the username and password (respectively) of your account at
-   <https://moodle.org>. This user account must be set as a maintainer of the plugin in
-   the Plugins directory.
+3. Log in to the Moodle Plugins directory at <https://moodle.org/plugins/>. Locate the
+   Navigation block > Plugins > API access. Use that page to generate your personal
+   token for the `plugins_maintenance` service.
 
-4. That's it! Now when you tag the repository with a tag that matches the configured
+4. Go back to your plugin repository at Github. Locate your plugin's Settings >
+   Secrets section. Use the 'New repository secret' button to define a new repository
+   secret to hold your access token. Use name `MOODLE_ORG_TOKEN` and set the value to
+   the one you generated in previous step.
+
+5. That's it! Now when you tag the repository with a tag that matches the configured
    condition, the tagged version will be released in the plugins directory.
 
 
