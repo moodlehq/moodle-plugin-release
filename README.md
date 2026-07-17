@@ -1,5 +1,12 @@
 # Releasing Moodle plugins in the Plugins directory automatically from GitHub Actions
 
+> [!WARNING]
+> **Publishing plugin versions through the API is temporarily unavailable**
+> 
+> Following the move from the Plugins Directory to Moodle Marketplace, this GitHub Action can no longer be used to publish new plugin versions through the API. Restoring automated uploads is the team's highest development priority after launch.
+> 
+> See [Launch limitations and upcoming functionality](https://moodle.atlassian.net/wiki/external/OTE3YmUxNTI3YzYzNGJmMzgwZWVjNTEzYTk2ZGE2ZDk#Upload-plugin-versions-through-the-API) for more information.
+
 ## Usage
 
 1. Copy the template file [moodle-release.yml](https://github.com/moodlehq/moodle-plugin-release/blob/main/moodle-release.yml)
