@@ -4,11 +4,11 @@
 
 1. Copy the template file [moodle-release.yml](https://github.com/moodlehq/moodle-plugin-release/blob/main/moodle-release.yml) into the `.github/workflows/moodle-release.yml` location within your plugin repository.
 
-2. Log in to the Moodle Marketplace. Navigate to Account Settings > Security (https://marketplace.moodle.com/account/security) and create a new API token. Copy the token immediately, as it is only displayed once.
+2. Log in to the Moodle Marketplace. Navigate to "Account Settings" > "Security" (https://marketplace.moodle.com/account/security) and create a new API token. Copy the token immediately, as it is only displayed once.
 
 3. Go to your plugin repository on GitHub. Navigate to "Settings" > "Secrets and Variables" > "Actions". Click "New repository secret", name it `MOODLE_MARKETPLACE_TOKEN`, and paste your API access token as the value.
 
-4. That's it! Now when you tag the repository with a tag that matches the configured condition (starts with v (e.g., v1.4.0)), the tagged version will be released in Moodle Marketplace.
+4. That's it! Now when you tag the repository with a tag that matches the configured condition (starts with `v`, e.g. `v1.4.0`), the tagged version will be released in Moodle Marketplace.
 
 
 ## Tips
@@ -22,7 +22,7 @@
       tags:
         - '*'
   ```
-* Marketplace API documentation is located at [moodledev.io](https://moodledev.io/general/community/plugincontribution/moodlemarketplaceapi)
+* Marketplace API documentation is located at [moodledev.io](https://moodledev.io/general/community/plugincontribution/moodlemarketplaceapi).
 
 
 ## License
