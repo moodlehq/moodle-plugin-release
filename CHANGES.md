@@ -1,3 +1,7 @@
+### 2026081901 ###
+
+* Enable publishing new plugin versions to Moodle Marketplace.
+
 ### 2021070201 ###
 
 * Use `--data-urlencode` for curl arguments to fix troubles with special characters in
