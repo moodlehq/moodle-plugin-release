@@ -1,3 +1,9 @@
+### 2026082501 ###
+
+* Converted the template into a reusable workflow (`workflow_call`), located at
+  `.github/workflows/moodle-release.yml`. Plugin repositories now add a small caller
+  workflow instead of copying the whole file — see README.md for the updated usage.
+
 ### 2026081901 ###
 
 * Enable publishing new plugin versions to Moodle Marketplace.
