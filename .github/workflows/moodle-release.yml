@@ -1,20 +1,23 @@
 #
-# Whenever a new tag starting with "v" is pushed, add the tagged version
-# to Moodle Marketplace at https://marketplace.moodle.com/
+# Reusable workflow: submit a tagged Moodle plugin version to Moodle Marketplace
+# at https://marketplace.moodle.com/
 #
-# revision: 2026082001
+# Call this workflow from your plugin repository, see README.md for details.
+#
+# revision: 2026082501
 #
 name: Release Plugin version to Moodle Marketplace
 
 on:
-  push:
-    tags:
-      - 'v*'
-
-  workflow_dispatch:
+  workflow_call:
     inputs:
       tag:
         description: 'Tag to be released (e.g. v1.4.0)'
+        required: false
+        type: string
+    secrets:
+      MOODLE_MARKETPLACE_TOKEN:
+        description: 'API token generated at https://marketplace.moodle.com/account/security'
         required: true
 
 defaults:
@@ -37,7 +40,7 @@ jobs:
       - name: Resolve Tag Name
         id: resolve-tag
         run: |
-          TAGNAME="${{ github.event.inputs.tag }}"
+          TAGNAME="${{ inputs.tag }}"
           if [[ -z "${TAGNAME}" && $GITHUB_REF == refs/tags/* ]]; then
             TAGNAME="${GITHUB_REF##*/}"
           fi

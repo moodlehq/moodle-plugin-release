@@ -2,7 +2,26 @@
 
 ## Usage
 
-1. Copy the template file [moodle-release.yml](https://github.com/moodlehq/moodle-plugin-release/blob/main/moodle-release.yml) into the `.github/workflows/moodle-release.yml` location within your plugin repository.
+This is a [reusable workflow](https://docs.github.com/en/actions/using-workflows/reusing-workflows). Instead of copying the whole file, add a small caller workflow to your plugin repository.
+
+1. Create `.github/workflows/moodle-release.yml` in your plugin repository with the following content:
+
+   ```yaml
+   name: Release Plugin version to Moodle Marketplace
+
+   on:
+     push:
+       tags:
+         - 'v*'
+
+   jobs:
+     release-to-marketplace:
+       uses: moodlehq/moodle-plugin-release/.github/workflows/moodle-release.yml@main
+       with:
+         tag: ${{ github.event.inputs.tag }}
+       secrets:
+         MOODLE_MARKETPLACE_TOKEN: ${{ secrets.MOODLE_MARKETPLACE_TOKEN }}
+   ```
 
 2. Log in to the Moodle Marketplace. Navigate to "Account Settings" > "Security" (https://marketplace.moodle.com/account/security) and create a new API token. Copy the token immediately, as it is only displayed once.
 
@@ -14,7 +33,7 @@
 ## Tips
 
 * Provide release notes when creating a GitHub Release. The workflow will automatically use your GitHub Release description.
-* If your release tags do not start with `v` character (such as `v9.0.1`) and you want to trigger the workflow for any tag, change the condition in the YAML file as:
+* If your release tags do not start with `v` character (such as `v9.0.1`) and you want to trigger the workflow for any tag, change the condition in your caller workflow as:
 
   ```
   on:
