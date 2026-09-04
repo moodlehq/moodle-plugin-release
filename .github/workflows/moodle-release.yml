@@ -4,7 +4,7 @@
 #
 # Call this workflow from your plugin repository, see README.md for details.
 #
-# revision: 2026082501
+# revision: 2026090401
 #
 name: Release Plugin version to Moodle Marketplace
 
@@ -34,9 +34,6 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v5
-
       - name: Resolve Tag Name
         id: resolve-tag
         run: |
@@ -51,6 +48,11 @@ jobs:
           fi
 
           echo "tag=${TAGNAME}" >> $GITHUB_OUTPUT
+
+      - name: Checkout Code
+        uses: actions/checkout@v5		
+        with:
+          ref: ${{ steps.resolve-tag.outputs.tag }}
 
       - name: Build Zip Package
         id: package

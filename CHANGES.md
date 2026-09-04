@@ -1,3 +1,9 @@
+### 2026090401 ###
+
+* Pass the resolved tag to `actions/checkout` so that manual runs (`workflow_dispatch`)
+  correctly checkout and package the specified tag commit instead of default branch `HEAD`.
+  Issue #16
+
 ### 2026082501 ###
 
 * Converted the template into a reusable workflow (`workflow_call`), located at

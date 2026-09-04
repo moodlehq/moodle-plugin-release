@@ -13,12 +13,17 @@ This is a [reusable workflow](https://docs.github.com/en/actions/using-workflows
      push:
        tags:
          - 'v*'
+     workflow_dispatch:
+       inputs:
+         tag:
+           description: 'Tag to be released (e.g. v1.4.0)'
+           required: true
 
    jobs:
      release-to-marketplace:
        uses: moodlehq/moodle-plugin-release/.github/workflows/moodle-release.yml@main
        with:
-         tag: ${{ github.event.inputs.tag }}
+         tag: ${{ inputs.tag }}
        secrets:
          MOODLE_MARKETPLACE_TOKEN: ${{ secrets.MOODLE_MARKETPLACE_TOKEN }}
    ```
