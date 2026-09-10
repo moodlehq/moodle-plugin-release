@@ -4,7 +4,7 @@
 #
 # Call this workflow from your plugin repository, see README.md for details.
 #
-# revision: 2026090401
+# revision: 2026091001
 #
 name: Release Plugin version to Moodle Marketplace
 
@@ -13,6 +13,15 @@ on:
     inputs:
       tag:
         description: 'Tag to be released (e.g. v1.4.0)'
+        required: false
+        type: string
+      release-notes-source:
+        description: 'Where to take the release notes from: ghrelease (the description of the GitHub Release belonging to the tag, default), input (the notes input of this workflow) or changelog (the changelog file in the root of the plugin)'
+        required: false
+        default: 'ghrelease'
+        type: string
+      notes:
+        description: 'Release notes to be submitted, used when release-notes-source is set to input'
         required: false
         type: string
     secrets:
@@ -50,7 +59,7 @@ jobs:
           echo "tag=${TAGNAME}" >> $GITHUB_OUTPUT
 
       - name: Checkout Code
-        uses: actions/checkout@v5		
+        uses: actions/checkout@v5
         with:
           ref: ${{ steps.resolve-tag.outputs.tag }}
 
@@ -76,12 +85,60 @@ jobs:
         id: release_notes
         env:
           TAGNAME: ${{ steps.resolve-tag.outputs.tag }}
+          NOTES_SOURCE: ${{ inputs.release-notes-source }}
+          NOTES_INPUT: ${{ inputs.notes }}
         run: |
-          NOTES=$(gh release view "$TAGNAME" --json body -q '.body' 2>/dev/null || true)
+          NOTES=""
 
-          echo "notes<<EOF" >> $GITHUB_OUTPUT
+          case "${NOTES_SOURCE}" in
+            ghrelease|"")
+              # An empty value is treated like the default, so that callers can pass the
+              # source through from their own optional input without having to set it.
+
+              # Take the release notes from the GitHub Release which belongs to the tag.
+              NOTES=$(gh release view "$TAGNAME" --json body -q '.body' 2>/dev/null || true)
+              ;;
+
+            input)
+              # Take the release notes from the notes input of this workflow.
+              NOTES="${NOTES_INPUT}"
+              ;;
+
+            changelog)
+              # Take the release notes from the first changelog file which exists in the plugin root.
+              # The file name is matched case-insensitively.
+              for CANDIDATE in CHANGES.md CHANGES.txt CHANGES CHANGELOG.md CHANGELOG.txt CHANGELOG; do
+                CHANGELOG_FILE=$(find . -maxdepth 1 -type f -iname "${CANDIDATE}" -print -quit)
+
+                if [[ -n "${CHANGELOG_FILE}" ]]; then
+                  echo "Taking the release notes from ${CHANGELOG_FILE}"
+                  NOTES=$(cat "${CHANGELOG_FILE}")
+                  break
+                fi
+              done
+
+              if [[ -z "${CHANGELOG_FILE}" ]]; then
+                echo "::warning::No changelog file found in the plugin root, the version will be submitted without release notes"
+              fi
+              ;;
+
+            *)
+              echo "::error::Invalid release-notes-source '${NOTES_SOURCE}', expected one of: ghrelease, input, changelog"
+              exit 1
+              ;;
+          esac
+
+          if [[ -z "${NOTES}" ]]; then
+            echo "::warning::No release notes could be determined from source '${NOTES_SOURCE}', the version will be submitted without release notes"
+          fi
+
+          # Use a delimiter which is random enough to never appear in the release notes
+          # themselves, as these can be arbitrary multiline text.
+          DELIMITER="notes-dab6827dc792e8e611ba73d744683587"
+
+          echo "notes<<${DELIMITER}" >> $GITHUB_OUTPUT
           echo "$NOTES" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          echo "${DELIMITER}" >> $GITHUB_OUTPUT
 
       - name: Submit Version to Marketplace API
         env:

@@ -1,3 +1,12 @@
+### 2026091001 ###
+
+* Add a `release-notes-source` input which controls where the release notes are taken from:
+  `ghrelease` (the description of the GitHub Release belonging to the tag, default and
+  previous behaviour), `input` (the new optional `notes` input) or `changelog` (the changelog
+  file in the root of the plugin). Issue #19
+* Emit a warning when no release notes could be determined at all, instead of silently
+  submitting a version with empty release notes.
+
 ### 2026090401 ###
 
 * Pass the resolved tag to `actions/checkout` so that manual runs (`workflow_dispatch`)
