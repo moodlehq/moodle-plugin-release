@@ -1,3 +1,13 @@
+### 2026091801 ###
+
+* The release notes are now determined with a fallback chain: the new optional `release_notes`
+  input, then the description of the GitHub Release belonging to the tag, then the changelog
+  file in the root of the plugin (`CHANGES.md`, `CHANGES.txt`, `CHANGES.html`, `CHANGES`,
+  `CHANGELOG.md`, `CHANGELOG.txt`, `CHANGELOG.html`, `CHANGELOG` or `UPGRADING.md`, matched
+  regardless of upper and lower case). Issue #19
+* Emit a warning when no release notes could be determined at all, instead of silently
+  submitting a version with empty release notes.
+
 ### 2026090401 ###
 
 * Pass the resolved tag to `actions/checkout` so that manual runs (`workflow_dispatch`)

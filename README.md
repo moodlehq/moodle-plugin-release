@@ -35,9 +35,34 @@ This is a [reusable workflow](https://docs.github.com/en/actions/using-workflows
 4. That's it! Now when you tag the repository with a tag that matches the configured condition (starts with `v`, e.g. `v1.4.0`), the tagged version will be released in Moodle Marketplace.
 
 
+## Release notes handling
+
+The workflow determines the release notes on its own. It tries these sources in order and uses the first one which yields anything:
+
+1. the `release_notes` input of this workflow, if you pass one,
+2. the description of the GitHub Release which belongs to the released tag,
+3. the first changelog file which exists in the root of your plugin: `CHANGES.md`, `CHANGES.txt`, `CHANGES.html`, `CHANGES`, `CHANGELOG.md`, `CHANGELOG.txt`, `CHANGELOG.html`, `CHANGELOG` or `UPGRADING.md`, matched regardless of upper and lower case.
+
+If none of them yields anything, the version is submitted without release notes and the workflow emits a warning about it.
+
+In other words, you do not have to do anything as long as you either write your release notes into the description of a GitHub Release or keep a changelog file in your plugin.
+
+If you want to compose the release notes yourself, for example by generating them within your caller workflow, hand them over with the `release_notes` input. Its value can be any expression which evaluates to the text you want to publish:
+
+```yaml
+[...]
+jobs:
+  release-to-marketplace:
+    uses: moodlehq/moodle-plugin-release/.github/workflows/moodle-release.yml@main
+    with:
+      tag: ${{ inputs.tag }}
+      release_notes: ${{ <the release notes of your choice> }}
+[...]
+```
+
+
 ## Tips
 
-* Provide release notes when creating a GitHub Release. The workflow will automatically use your GitHub Release description.
 * If your release tags do not start with `v` character (such as `v9.0.1`) and you want to trigger the workflow for any tag, change the condition in your caller workflow as:
 
   ```
