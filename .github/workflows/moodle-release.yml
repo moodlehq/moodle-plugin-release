@@ -4,7 +4,7 @@
 #
 # Call this workflow from your plugin repository, see README.md for details.
 #
-# revision: 2026090401
+# revision: 2026091801
 #
 name: Release Plugin version to Moodle Marketplace
 
@@ -13,6 +13,10 @@ on:
     inputs:
       tag:
         description: 'Tag to be released (e.g. v1.4.0)'
+        required: false
+        type: string
+      release_notes:
+        description: 'Release notes to be submitted. If not set, they are taken from the GitHub Release belonging to the tag or, failing that, from the changelog file of the plugin.'
         required: false
         type: string
     secrets:
@@ -50,7 +54,7 @@ jobs:
           echo "tag=${TAGNAME}" >> $GITHUB_OUTPUT
 
       - name: Checkout Code
-        uses: actions/checkout@v5		
+        uses: actions/checkout@v5
         with:
           ref: ${{ steps.resolve-tag.outputs.tag }}
 
@@ -76,12 +80,42 @@ jobs:
         id: release_notes
         env:
           TAGNAME: ${{ steps.resolve-tag.outputs.tag }}
+          RELEASE_NOTES: ${{ inputs.release_notes }}
         run: |
-          NOTES=$(gh release view "$TAGNAME" --json body -q '.body' 2>/dev/null || true)
+          # Take the release notes from the release_notes input, from the GitHub Release
+          # belonging to the tag or from the changelog file of the plugin, in that order.
+          NOTES="${RELEASE_NOTES}"
 
-          echo "notes<<EOF" >> $GITHUB_OUTPUT
+          if [[ -z "${NOTES}" ]]; then
+            NOTES=$(gh release view "$TAGNAME" --json body -q '.body' 2>/dev/null || true)
+          fi
+
+          if [[ -z "${NOTES}" ]]; then
+            for CANDIDATE in CHANGES.md CHANGES.txt CHANGES.html CHANGES CHANGELOG.md CHANGELOG.txt CHANGELOG.html CHANGELOG UPGRADING.md; do
+              # The file name is matched regardless of upper and lower case.
+              CHANGELOG_FILE=$(find . -maxdepth 1 -type f -iname "${CANDIDATE}" -print -quit)
+
+              if [[ -n "${CHANGELOG_FILE}" ]]; then
+                echo "Taking the release notes from ${CHANGELOG_FILE}"
+                NOTES=$(cat "${CHANGELOG_FILE}")
+                break
+              fi
+            done
+          fi
+
+          if [[ -z "${NOTES}" ]]; then
+            echo "::warning::No release notes could be determined, the version will be submitted without release notes"
+          fi
+
+          # Write the notes to the step output using GitHub's multiline syntax, see
+          # https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands#multiline-strings
+          # The delimiter must not occur as a line within the notes. As they can come from a
+          # changelog file whose content we do not control, a simple "EOF" could not be ruled out there.
+          DELIMITER="notes-dab6827dc792e8e611ba73d744683587"
+
+          echo "notes<<${DELIMITER}" >> $GITHUB_OUTPUT
           echo "$NOTES" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          echo "${DELIMITER}" >> $GITHUB_OUTPUT
 
       - name: Submit Version to Marketplace API
         env:
