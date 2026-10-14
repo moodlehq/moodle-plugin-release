@@ -4,7 +4,7 @@
 #
 # Call this workflow from your plugin repository, see README.md for details.
 #
-# revision: 2026091801
+# revision: 2026101401
 #
 name: Release Plugin version to Moodle Marketplace
 
@@ -132,8 +132,8 @@ jobs:
             -X POST \
             -H "Authorization: Bearer ${TOKEN}" \
             -F "file=@${ZIP_FILE}" \
-            -F "releaseNotes=${NOTES}" \
-            -F "vcsTag=${TAGNAME}" \
+            --form-string "releaseNotes=${NOTES}" \
+            --form-string "vcsTag=${TAGNAME}" \
             "${ENDPOINT}")
 
           echo "Response HTTP Status: ${HTTP_STATUS}"
