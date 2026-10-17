@@ -61,6 +61,25 @@ jobs:
 ```
 
 
+## Repository and branch
+
+Each version is submitted with the URL of your repository and the branch the tag was made on, so that they show up on Moodle Marketplace.
+
+The workflow works out the branch on its own. It only looks at branches named `main`, `master` or `MOODLE_*_STABLE` (for example `MOODLE_405_STABLE`), which is what most plugins use. If the tag belongs to exactly one of them, that branch is submitted. If several of them contain the tag, for example because the stable branches were created after it, and one of them is the default branch of your repository, the default branch is submitted. If the branch still cannot be told, the version is submitted without a branch and the workflow emits a warning about it.
+
+If your release branches are named differently, list them in the `release_branches` input. Separate the names with commas and use `*` as a wildcard:
+
+```yaml
+[...]
+    with:
+      tag: ${{ inputs.tag }}
+      release_branches: 'main,release-*'
+[...]
+```
+
+Pass an empty string if you do not want the branch to be submitted at all.
+
+
 ## Tips
 
 * If your release tags do not start with `v` character (such as `v9.0.1`) and you want to trigger the workflow for any tag, change the condition in your caller workflow as:

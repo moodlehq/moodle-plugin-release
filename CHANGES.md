@@ -1,3 +1,10 @@
+### 2026101700 ###
+
+* The repository URL is now submitted with the version, so it is filled in on Moodle Marketplace.
+* The branch is now submitted with the version as well. It is detected among the release branches
+  which contain the tag, `main`, `master` and `MOODLE_*_STABLE` by default, which can be changed
+  with the new optional `release_branches` input.
+
 ### 2026101401 ###
 
 * Fixed release notes being cut off at the first semicolon. Everything after it was missing
