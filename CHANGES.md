@@ -1,3 +1,8 @@
+### 2026101401 ###
+
+* Fixed release notes being cut off at the first semicolon. Everything after it was missing
+  from the version on Moodle Marketplace.
+
 ### 2026091801 ###
 
 * The release notes are now determined with a fallback chain: the new optional `release_notes`
