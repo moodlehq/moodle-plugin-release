@@ -1,3 +1,7 @@
+### 2026101700 ###
+
+* The repository URL is now submitted with the version, so it is filled in on Moodle Marketplace.
+
 ### 2026101401 ###
 
 * Fixed release notes being cut off at the first semicolon. Everything after it was missing

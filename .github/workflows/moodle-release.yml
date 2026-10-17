@@ -4,7 +4,7 @@
 #
 # Call this workflow from your plugin repository, see README.md for details.
 #
-# revision: 2026101401
+# revision: 2026101700
 #
 name: Release Plugin version to Moodle Marketplace
 
@@ -123,6 +123,7 @@ jobs:
           COMPONENT: ${{ steps.package.outputs.component }}
           ZIP_FILE: ${{ steps.package.outputs.zip_file }}
           NOTES: ${{ steps.release_notes.outputs.notes }}
+          VCSREPOSITORYURL: ${{ github.server_url }}/${{ github.repository }}
         run: |
           ENDPOINT="${BASE_URL}/plugins/${COMPONENT}/versions"
 
@@ -134,6 +135,7 @@ jobs:
             -F "file=@${ZIP_FILE}" \
             --form-string "releaseNotes=${NOTES}" \
             --form-string "vcsTag=${TAGNAME}" \
+            --form-string "vcsRepositoryUrl=${VCSREPOSITORYURL}" \
             "${ENDPOINT}")
 
           echo "Response HTTP Status: ${HTTP_STATUS}"
